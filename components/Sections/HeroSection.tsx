@@ -1,132 +1,152 @@
 "use client";
-import { motion } from "framer-motion";
-import Image from "next/image";
-import Link from "next/link"; // <-- Kita perlu Link untuk tombol
-import { ArrowDown } from "lucide-react"; // <-- Ikon untuk tombol (opsional, tapi keren)
 
-// =======================================================
-// VARIAN ANIMASI UNTUK TEKS (Staggering / Berurutan)
-// =======================================================
-// Ini adalah "parent"
-const textContainerVariants = {
+import { useEffect, useState } from "react";
+import { motion, Variants } from "framer-motion";
+import Image from "next/image";
+import { Button } from "@/components/ui/button";
+import { ArrowDown, Smartphone } from "lucide-react"; // 1️⃣ UBAH DI SINI
+import { useMusic } from "@/context/musiccontext"; // 🆕 pakai context
+
+const textContainer = {
   hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.2, // <-- Jeda antar anak (h1, p, p, button)
-    },
-  },
+  visible: { opacity: 1, transition: { staggerChildren: 0.25 } },
 };
 
-// Ini adalah "children" (item di dalamnya)
-const textItemVariants = {
-  hidden: { opacity: 0, y: 30 }, // <-- Mulai dari bawah
+const textItem: Variants = {
+  hidden: { opacity: 0, y: 30 },
   visible: {
     opacity: 1,
     y: 0,
-    transition: {
-      duration: 0.6,
-      ease: "easeOut",
-    },
+    transition: { duration: 0.6, ease: [0.25, 1, 0.5, 1] },
   },
 };
 
 export default function HeroSection() {
+  const [isTransitioning, setIsTransitioning] = useState(false);
+  const { play, isPlaying, pause } = useMusic();
+  const [isMusicPlaying, setIsMusicPlaying] = useState(false);
+
+  // Lock scroll sebelum musik aktif
+  useEffect(() => {
+    document.body.style.overflow = isMusicPlaying ? "auto" : "hidden";
+  }, [isMusicPlaying]);
+
+  const handleOpenInvitation = async () => {
+    await play();
+    setIsMusicPlaying(true);
+    setIsTransitioning(true);
+
+    if (document.documentElement.requestFullscreen) {
+      try {
+        await document.documentElement.requestFullscreen();
+      } catch (_) {}
+    }
+
+    setTimeout(() => {
+      document.body.style.overflow = "auto";
+      const section = document.querySelector("#ucapan");
+      if (section) section.scrollIntoView({ behavior: "smooth" });
+      setTimeout(() => setIsTransitioning(false), 800);
+    }, 1000);
+  };
+
   return (
     <section
-      className="relative min-h-screen flex flex-col md:flex-row items-center justify-center 
-                 px-6 md:px-20 py-12 gap-16 md:gap-12 text-white overflow-hidden
-                 // =======================================================
-                 // BG BARU: Gradient radial gelap untuk nuansa 
-                 // =======================================================
-                 bg-gradient-to-br from-gray-900 via-purple-950 to-gray-900"
+      className="relative flex flex-col-reverse md:flex-row items-center justify-center
+                 min-h-[100vh] px-6 sm:px-8 md:px-16 py-20
+                 text-white overflow-hidden"
     >
-      {/* Ini adalah elemen "parent" untuk animasi teks.
-        Kita ganti 'animate' jadi 'whileInView' dan tambahkan 'viewport'.
-      */}
-      <motion.div
-        className="max-w-xl text-center md:text-left"
-        // =======================================================
-        // PERUBAHAN ANIMASI UTAMA (Teks)
-        // =======================================================
-        initial="hidden" // <-- Mulai dari state "hidden"
-        whileInView="visible" // <-- Animasikan ke state "visible" saat di-scroll
-        viewport={{ once: false, amount: 0.3 }} // <-- Ulangi ('once: false')
-        variants={textContainerVariants} // <-- Gunakan varian "parent"
-      >
-        {/* Setiap 'motion' di dalam sini adalah 'child' dan akan di-stagger */}
+      {/* 🌑 FADE TO BLACK */}
+      {isTransitioning && (
+        <motion.div
+          className="fixed inset-0 bg-black z-[9999]"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 1 }}
+        />
+      )}
 
+      
+
+      {/* 🩷 TEKS */}
+      <motion.div
+        className="relative z-10 w-full max-w-xl text-center md:text-left 
+                   flex flex-col items-center md:items-start gap-4 px-2 sm:px-4"
+        variants={textContainer}
+        initial="hidden"
+        animate="visible"
+      >
         <motion.h1
-          className="text-7xl lg:text-8xl font-extrabold mb-4 bg-gradient-to-r from-pink-400 via-purple-400 to-blue-400 bg-clip-text text-transparent"
-          variants={textItemVariants} // <-- Gunakan varian "child"
+          className="text-4xl sm:text-6xl lg:text-7xl font-extrabold 
+                     bg-gradient-to-r from-pink-400 via-purple-400 to-blue-400 
+                     bg-clip-text text-transparent leading-tight"
+          variants={textItem}
         >
-          Dinda & Raka
+          Anna & Dika
         </motion.h1>
 
         <motion.p
-          className="text-pink-300 text-2xl mb-6 font-semibold"
-          variants={textItemVariants} // <-- Gunakan varian "child"
+          className="text-pink-300 text-lg sm:text-2xl font-semibold"
+          variants={textItem}
         >
-          20 Oktober 2025
+          15 November 2025
         </motion.p>
 
         <motion.p
-          className="text-white/80 text-lg mb-10"
-          variants={textItemVariants}
+          className="text-white/80 text-base sm:text-lg max-w-md leading-relaxed mt-2"
+          variants={textItem}
         >
           Memulai perjalanan hidup baru bersama dengan cinta dan kebahagiaan.
           Terima kasih telah menjadi inspirasi.
         </motion.p>
 
-        {/* ======================================================= */}
-        {/* TAMBAHAN: Tombol CTA (Call to Action) */}
-        {/* ======================================================= */}
-        <motion.div variants={textItemVariants}>
-          <Link
-            href="#undangan" // <-- Ganti dengan ID section undangan Anda
-            className="group relative inline-flex items-center justify-center gap-2 
-                       rounded-full bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 
-                       px-8 py-3 text-lg font-semibold text-white shadow-lg
-                       transition-all duration-300 ease-in-out
-                       hover:shadow-xl hover:shadow-purple-500/30"
+        {/* 2️⃣ TAMBAHKAN BADGE DI SINI */}
+        <motion.div
+          className="hidden md:inline-flex items-center gap-2.5 
+                     bg-purple-900/40 border border-purple-700/30 
+                     px-4 py-2 rounded-full text-xs text-purple-200 mt-4"
+          variants={textItem}
+        >
+          <Smartphone className="h-4 w-4 flex-shrink-0" />
+          <span>Gunakan handphone untuk pengalaman terbaik</span>
+        </motion.div>
+
+        <motion.div className="mt-6" variants={textItem}>
+          <Button
+            size="lg"
+            onClick={handleOpenInvitation}
+            disabled={isTransitioning}
+            className="relative group overflow-hidden rounded-full 
+                       bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 
+                       text-white px-8 py-3 text-base sm:text-lg font-semibold shadow-lg 
+                       transition-all duration-300 ease-in-out 
+                       hover:shadow-purple-500/40 hover:scale-[1.03]"
           >
-            {/* Efek "kilau" saat di-hover */}
             <span
-              className="absolute inset-0 w-full h-full rounded-full 
-                         bg-white opacity-0 transition-opacity duration-300 
-                         group-hover:opacity-10 group-hover:blur-lg"
+              className="absolute inset-0 bg-white opacity-0 rounded-full 
+                         transition-opacity duration-300 group-hover:opacity-10 group-hover:blur-md"
             />
-            Lihat Undangan
-            <ArrowDown className="h-5 w-5 transition-transform duration-300 group-hover:translate-y-0.5" />
-          </Link>
+            {isPlaying ? "Pause Music" : "Play Music"}
+            <ArrowDown className="ml-2 h-5 w-5 transition-transform duration-300 group-hover:translate-y-1" />
+          </Button>
         </motion.div>
       </motion.div>
 
-      {/* Ini adalah elemen gambar.
-        Kita juga gunakan 'whileInView' di sini.
-      */}
+      {/* 💍 GAMBAR */}
       <motion.div
-        className="max-w-sm rounded-full shadow-2xl overflow-hidden"
-        // =======================================================
-        // PERUBAHAN ANIMASI UTAMA (Gambar)
-        // =======================================================
-        initial={{ opacity: 0, scale: 0.8, rotate: -15, x: 50 }} // <-- Animasi awal
-        whileInView={{
-          opacity: 1,
-          scale: 1,
-          rotate: 0,
-          x: 0,
-        }} // <-- Animasi saat terlihat
-        viewport={{ once: false, amount: 0.3 }} // <-- Ulangi ('once: false')
+        className="relative mb-10 md:mb-0 max-w-[260px] sm:max-w-[340px] md:max-w-sm 
+                   rounded-full overflow-hidden border-4 border-purple-500/30 shadow-2xl"
+        initial={{ opacity: 0, scale: 0.8, rotate: -10, x: 50 }}
+        whileInView={{ opacity: 1, scale: 1, rotate: 0, x: 0 }}
         transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-        whileHover={{ scale: 1.05, rotate: 2 }} // <-- Efek Gen Z saat di-hover
+        whileHover={{ scale: 1.05, rotate: 2 }}
       >
         <Image
           src="/galeri/galeri2.jpg"
           alt="Foto Pengantin"
-          width={500}
-          height={500}
-          className="overflow-hidden" // <-- 'object-cover' mungkin lebih baik
+          width={800}
+          height={800}
+          className="object-cover w-full h-full"
           priority
         />
       </motion.div>
