@@ -4,8 +4,8 @@ import { useEffect, useState } from "react";
 import { motion, Variants } from "framer-motion";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { ArrowDown, Smartphone } from "lucide-react"; // 1️⃣ UBAH DI SINI
-import { useMusic } from "@/context/musiccontext"; // 🆕 pakai context
+import { ArrowDown, Smartphone } from "lucide-react"; 
+import { useMusic } from "@/context/musiccontext"; 
 
 const textContainer = {
   hidden: { opacity: 0 },

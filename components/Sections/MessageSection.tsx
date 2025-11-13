@@ -148,13 +148,11 @@ export default function PersonalMessageSection() {
       ref={sectionRef}
       id="ucapan"
       className="relative mx-4 md:mx-auto md:max-w-6xl px-6 md:px-8 py-16 my-20 mt-8 md:mt-12 max-w-8xl
-           text-white rounded-3xl shadow-2xl overflow-y-auto overflow-x-hidden scroll-smooth h-[80vh] bg-transparent "
+           text-white rounded-3xl shadow-2xl overflow-y-auto overflow-x-hidden scroll-smooth h-[80vh] "
     >
       <div className="absolute -top-1/4 -right-1/4 w-[300px] h-[300px] animate-pulse" />
 
-      <h2 className="text-4xl font-semibold bg-gradient-to-r from-pink-400 via-purple-400 to-blue-400 bg-clip-text text-transparent mb-10 text-center">
-        Ucapan dari Team
-      </h2>
+     
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
         {people.map((person, idx) => (
