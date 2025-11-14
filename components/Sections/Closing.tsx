@@ -1,7 +1,7 @@
 // src/components/Sections/FinalTeamClosingSection.tsx
 "use client";
 
-import { ArrowUpCircleIcon, BriefcaseIcon, StarIcon } from "lucide-react";
+import { ArrowUpCircleIcon,  StarIcon } from "lucide-react";
 
 
 export default function FinalTeamClosingSection() {

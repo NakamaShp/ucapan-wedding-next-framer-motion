@@ -1,7 +1,5 @@
-import ClosingSection from "@/components/Sections/Closing";
+
 import HeroSection from "@/components/Sections/HeroSection";
-import PersonalMessageSection from "@/components/Sections/MessageSection";
-import ChoiceSection from "@/components/Sections/OneDay";
 
 export default function Home() {
   return (

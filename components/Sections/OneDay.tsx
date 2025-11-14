@@ -1,22 +1,22 @@
 // components/ChoiceSection.tsx
 "use client"; // Dipertahankan karena ini adalah praktik umum di Next.js App Router
 
-import React from "react"; 
+import React from "react";
 // ❌ Import motion dan Variants dihapus
 
 // Data untuk bagian "One Day" (4 Gambar)
 const oneDayImages: string[] = [
-  "/choice/oneday/1.jpg",
-  "/choice/oneday/2.jpg",
-  "/choice/oneday/3.jpg",
-  "/choice/oneday/4.jpg",
+  "/Choice/oneday/1.jpg",
+  "/Choice/oneday/2.jpg",
+  "/Choice/oneday/3.jpg",
+  "/Choice/oneday/4.jpg",
 ];
 
 // Data untuk bagian "Day One" (3 Gambar)
 const dayOneImages: string[] = [
-  "/choice/dayone/1.jpg", // Gambar pertama yang akan di tengah
-  "/choice/dayone/2.jpg",
-  "/choice/dayone/3.jpg",
+  "/Choice/dayone/1.jpg", // Gambar pertama yang akan di tengah
+  "/Choice/dayone/2.jpg",
+  "/Choice/dayone/3.jpg",
 ];
 
 // Menggunakan gaya 'export default function' (Gaya 1)
